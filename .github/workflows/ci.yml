@@ -1,8 +1,8 @@
-name: CICD_practice_1
+name: UI Automation & CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main", "feature/**" ] # 👈 允許所有 feature/ 開頭的分支觸發 CI
   pull_request:
     branches: [ "main" ]
 
@@ -19,11 +19,15 @@ jobs:
       with:
         python-version: '3.10'
 
-    - name: 安裝套件
+    - name: 安裝專案套件
       run: |
         python -m pip install --upgrade pip
-        pip install pytest
+        pip install pytest-playwright
 
-    - name: 執行自動化測試
+    - name: 安裝 Playwright 瀏覽器及其依賴
       run: |
-        pytest
+        playwright install --with-deps
+
+    - name: 執行 UI 自動化測試
+      run: |
+        pytest test_ui.py
