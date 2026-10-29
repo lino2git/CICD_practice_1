@@ -29,15 +29,12 @@ jobs:
         playwright install --with-deps
 
     - name: 執行 UI 自動化測試
-      id: run-tests
-      # continue-on-error 屬於 GitHub Actions 的 step 屬性，必須與 run 同一階層
-      continue-on-error: true
       run: |
         pytest test_ui.py --screenshot=only-on-failure --video=retain-on-failure --output=test-results
 
     - name: 上傳失敗截圖與影片 (Artifacts)
-      # 只要 pytest 步驟失敗（不論是否被 continue-on-error 捕捉），就執行上傳
-      if: steps.run-tests.outcome == 'failure'
+      # if: failure() 代表「只有前面有步驟失敗時，才執行此步驟」
+      if: failure()
       uses: actions/upload-artifact@v4
       with:
         name: playwright-failure-artifacts
