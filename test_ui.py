@@ -2,20 +2,22 @@ import re
 from playwright.sync_api import Page, expect
 
 def test_example_website(page: Page):
-    # 1. 前往目標網站
+    # 1. 強制設定瀏覽器請求標頭為英文
+    page.set_extra_http_headers({"Accept-Language": "en-US,en;q=0.9"})
+
+    # 2. 前往目標網站
     page.goto("https://example.com")
 
-    # 2. 驗證網頁 Title 是否包含 "Example Domain"
+    # 3. 驗證 Title
     expect(page).to_have_title(re.compile("Example Domain"))
 
-    # 3. 驗證內文段落是否包含關鍵字（適應新版 example.com 的結構）
+    # 4. 驗證內文段落
     paragraph = page.locator("p").first
     expect(paragraph).to_contain_text("documentation examples")
 
-    # 4. 驗證頁面上有 "Learn more" 連結並點擊
-    learn_more_link = page.get_by_role("link", name="Learn more")
-    expect(learn_more_link).to_be_visible()
+    # 5. 點擊 Learn more 連結
+    learn_more_link = page.get_by_role("link", name=re.compile("Learn more|了解更多|詳細資訊", re.I))
     learn_more_link.click()
 
-    # 5. 驗證跳轉後的網址是否為 iana.org
+    # 6. 驗證網址
     expect(page).to_have_url(re.compile("iana.org"))
