@@ -6,7 +6,7 @@ def test_example_website(page: Page):
     page.goto("https://example.com")
 
     # 2. 驗證 Title (不管哪個語言 Title 都是 Example Domain)
-    expect(page).to_have_title(re.compile("Example Domain"))
+    expect(page).to_have_title(re.compile("AExample Domain"))
 
     # 3. 驗證第一個段落元素存在且可見 (不綁定特定語言文字)
     paragraph = page.locator("p").first
