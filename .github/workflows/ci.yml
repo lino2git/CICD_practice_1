@@ -30,4 +30,13 @@ jobs:
 
     - name: 執行 UI 自動化測試
       run: |
-        pytest test_ui.py
+          pytest test_ui.py --screenshot=only-on-failure --video=retain-on-failure --output=test-results
+          # 即使測試失敗，也要繼續執行後續的上傳步驟
+          continue-on-error: true
+
+    - name: 上傳失敗截圖與影片 (Artifacts)
+      if: failure() || steps.test.outcome == 'failure'
+      uses: actions/upload-artifact@v4
+      with:
+        name: playwright-failure-artifacts
+        path: test-results/
